@@ -40,11 +40,20 @@ export const metadata: Metadata = {
     description: "Pick from three hidden piles. Receive a reflection about where you are right now.",
     type: "website",
     url: "https://ifeelseen.ai",
+    images: [
+      {
+        url: "https://ifeelseen.ai/card-back.jpg",
+        width: 1024,
+        height: 1536,
+        alt: "I Feel Seen",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "I Feel Seen",
     description: "Pick from three hidden piles. Receive a reflection about where you are right now.",
+    images: ["https://ifeelseen.ai/card-back.jpg"],
   },
 };
 
