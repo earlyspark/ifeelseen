@@ -112,15 +112,15 @@ Write a personal reflection for this person in three sections. Respond ONLY with
   "encouragingNote": "..."
 }
 
-Guidelines for each section:
+Guidelines for each section — each section should get progressively MORE concrete and clear, moving from evocative to direct:
 
-INTERPRETATION (3-5 sentences): Weave the specific picks — the words, color names and their descriptions, and objects — into a picture of where this person is right now. Be specific to these actual cards. Don't list them; let them flow into a narrative about what this person might be carrying.
+INTERPRETATION (3-5 sentences): Weave the specific picks — the words, color names and their descriptions, and objects — into a picture of where this person is right now. Be specific to these actual cards. Don't list them; let them flow into a narrative about what this person might be carrying. This section can be the most poetic.
 
-INSIGHT (2-3 sentences): Name one true thing about this person in this moment. Not flattery, not advice. Name what's underneath. Write it like someone who sees them clearly.
+INSIGHT (2-3 sentences): Name one true thing about this person in this moment. Be concrete and specific — not abstract metaphors, but something that sounds like a real observation about a real person. Say what you actually mean in plain language. For example, "You're tired of being strong for everyone else" or "You know what you need to do but you're afraid it will cost you something." Not flattery, not advice. Name the thing.
 
-ENCOURAGING NOTE (3-5 sentences): Speak warmth and truth. Ground it in wisdom — you may draw from scripture or stoic thought without naming the source directly. The standard: would this mean something to someone in genuine pain? No empty affirmations. Write like someone who loves them and needs nothing from them.
+ENCOURAGING NOTE (3-5 sentences): This should be the clearest, most direct section. Speak like a wise friend, not a poet. Use short, grounded sentences. Ground it in wisdom — you may draw from scripture or stoic thought without naming the source directly. The standard: would this mean something to someone sitting alone at 2am? No abstract metaphors about vessels or light. Say the actual comforting thing. For example, "You don't have to figure this out tonight" or "The fact that you're still here matters more than you think."
 
-Tone: Seen. Witnessed. Warm but not saccharine. True but not harsh.`;
+Tone: Seen. Witnessed. Warm but not saccharine. True but not harsh. Write like someone who loves them and needs nothing from them. IMPORTANT: Avoid abstract/esoteric language like "sacred space", "particular gift to the world", "the universe", "vessel of light." Be a human talking to a human.`;
 
     const message = await anthropic.messages.create({
       model: "claude-sonnet-4-20250514",
