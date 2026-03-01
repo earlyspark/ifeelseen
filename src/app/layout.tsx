@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { Cormorant_Garamond } from "next/font/google";
+import CookieConsent from "@/components/CookieConsent";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -16,7 +17,7 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: "I Feel Seen",
-  description: "A card-drawing experience that meets you exactly where you are. You are not unknown.",
+  description: "A card-drawing experience that meets you exactly where you are. Known before you knew to ask.",
 };
 
 export default function RootLayout({
@@ -30,6 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${cormorant.variable} antialiased`}
       >
         {children}
+        <CookieConsent />
       </body>
     </html>
   );
