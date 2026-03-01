@@ -22,7 +22,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: "I Feel Seen",
-  description: "Pick from three hidden piles and receive a personal reflection for your current moment.",
+  description: "Choose an experience. Discover something true about where you are right now.",
   keywords: [
     "I feel seen",
     "feeling lost and unknown",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     title: "I Feel Seen",
-    description: "Pick from three hidden piles. Receive a reflection about where you are right now.",
+    description: "Choose an experience. Discover something true about where you are right now.",
     type: "website",
     url: "https://ifeelseen.ai",
     images: [
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "I Feel Seen",
-    description: "Pick from three hidden piles. Receive a reflection about where you are right now.",
+    description: "Choose an experience. Discover something true about where you are right now.",
     images: ["https://ifeelseen.ai/card-back-og.jpg"],
   },
 };

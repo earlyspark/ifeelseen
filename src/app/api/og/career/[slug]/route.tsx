@@ -88,9 +88,9 @@ export async function GET(
           src={cardUrl}
           alt=""
           style={{
-            width: "180px",
-            height: "270px",
-            borderRadius: "16px",
+            width: "130px",
+            height: "195px",
+            borderRadius: "12px",
             objectFit: "cover",
             boxShadow: "0 8px 40px rgba(0,0,0,0.15)",
             border: "1px solid rgba(0,0,0,0.10)",
