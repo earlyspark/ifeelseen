@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import CardPile from "@/components/CardPile";
 import {
   wordCards,
@@ -93,6 +94,16 @@ export default function DrawPage() {
           )}
         </AnimatePresence>
       </div>
+
+      <footer className="mt-20 pb-24 text-center">
+        <Link
+          href="/"
+          className="text-xs text-white/20 transition-colors hover:text-white/40"
+          style={{ fontFamily: "var(--font-cormorant)" }}
+        >
+          I Feel Seen
+        </Link>
+      </footer>
     </main>
   );
 }

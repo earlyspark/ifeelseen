@@ -3,15 +3,18 @@
 import { useState } from "react";
 import Link from "next/link";
 
-export default function ResultActions({ id }: { id: string }) {
+const ACCENT = "#c47c5a";
+const TEXT_SECONDARY = "#5c544a";
+const TEXT_MUTED = "#8a8078";
+
+export default function ResultActions({ slug }: { slug: string }) {
   const [copied, setCopied] = useState(false);
 
   const handleCopyLink = async () => {
-    const url = `${window.location.origin}/cards/result/${id}`;
+    const url = `${window.location.origin}/quiz/career/result/${slug}`;
     try {
       await navigator.clipboard.writeText(url);
     } catch {
-      // Fallback for browsers without clipboard API
       const el = document.createElement("textarea");
       el.value = url;
       el.style.position = "fixed";
@@ -29,17 +32,22 @@ export default function ResultActions({ id }: { id: string }) {
     <div className="flex flex-col items-center gap-3">
       <button
         onClick={handleCopyLink}
-        className="cursor-pointer rounded-full border border-[#c9a84c]/30 bg-[#c9a84c]/20 px-8 py-2.5 text-base text-[#c9a84c] transition-colors hover:bg-[#c9a84c]/30"
-        style={{ fontFamily: "var(--font-cormorant)" }}
+        className="cursor-pointer rounded-full border px-8 py-2.5 text-base transition-colors hover:opacity-80"
+        style={{
+          fontFamily: "var(--font-cormorant)",
+          borderColor: `${ACCENT}50`,
+          backgroundColor: `${ACCENT}20`,
+          color: TEXT_SECONDARY,
+        }}
       >
         {copied ? "Link copied" : "Copy link"}
       </button>
       <Link
-        href="/cards"
-        className="text-sm text-white/30 underline underline-offset-2 hover:text-white/50"
-        style={{ fontFamily: "var(--font-cormorant)" }}
+        href="/quiz/career"
+        className="text-sm underline underline-offset-2 transition-opacity hover:opacity-70"
+        style={{ fontFamily: "var(--font-cormorant)", color: TEXT_MUTED }}
       >
-        Draw again
+        Retake quiz
       </Link>
     </div>
   );
