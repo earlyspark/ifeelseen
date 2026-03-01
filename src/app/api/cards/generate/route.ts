@@ -43,12 +43,12 @@ export async function POST(req: NextRequest) {
       !words?.length ||
       !colors?.length ||
       !objects?.length ||
-      words.length !== 3 ||
-      colors.length !== 3 ||
-      objects.length !== 3
+      words.length !== 2 ||
+      colors.length !== 2 ||
+      objects.length !== 2
     ) {
       return NextResponse.json(
-        { error: "Exactly 3 word, 3 color, and 3 object card IDs required." },
+        { error: "Exactly 2 word, 2 color, and 2 object card IDs required." },
         { status: 400 }
       );
     }
@@ -58,9 +58,9 @@ export async function POST(req: NextRequest) {
     const objectData = findObjectCards(objects);
 
     if (
-      wordData.length !== 3 ||
-      colorData.length !== 3 ||
-      objectData.length !== 3
+      wordData.length !== 2 ||
+      colorData.length !== 2 ||
+      objectData.length !== 2
     ) {
       return NextResponse.json(
         { error: "One or more card IDs are invalid." },
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
       .join("; ");
     const objectList = objectData.map((o) => o.object).join(", ");
 
-    const prompt = `Someone drew 9 cards from three piles — words, colors, and objects. Here is what they drew:
+    const prompt = `Someone drew 6 cards from three piles — words, colors, and objects. Here is what they drew:
 
 Words: ${wordList}
 Colors: ${colorList}

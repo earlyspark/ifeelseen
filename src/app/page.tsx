@@ -105,7 +105,7 @@ export default function Home() {
           className="text-base leading-relaxed text-white/50 sm:text-lg"
           style={{ fontFamily: "var(--font-cormorant)" }}
         >
-          Draw nine cards — three words, three colors, three objects — without thinking. Then watch what you chose.
+          Draw six cards — two words, two colors, two objects — without thinking. Then watch what you chose.
         </p>
         <div className="my-4 h-px bg-white/8" />
         <p

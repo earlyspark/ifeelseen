@@ -20,9 +20,9 @@ export default function DrawPage() {
   const [selectedObjects, setSelectedObjects] = useState<ObjectCard[]>([]);
 
   const allPicked =
-    selectedWords.length === 3 &&
-    selectedColors.length === 3 &&
-    selectedObjects.length === 3;
+    selectedWords.length === 2 &&
+    selectedColors.length === 2 &&
+    selectedObjects.length === 2;
 
   const handleReveal = () => {
     const params = new URLSearchParams({
@@ -44,7 +44,7 @@ export default function DrawPage() {
             Pick without thinking.
           </h1>
           <p className="mt-2 text-sm text-white/40">
-            Pick 3 from each pile. Don&apos;t overthink it.
+            Pick 2 from each pile. Don&apos;t overthink it.
           </p>
         </div>
 
@@ -53,7 +53,7 @@ export default function DrawPage() {
             label="Words"
 
             cards={wordCards}
-            maxPicks={3}
+            maxPicks={2}
             onSelectionChange={setSelectedWords}
           />
 
@@ -61,7 +61,7 @@ export default function DrawPage() {
             label="Colors"
 
             cards={colorCards}
-            maxPicks={3}
+            maxPicks={2}
             onSelectionChange={setSelectedColors}
           />
 
@@ -69,7 +69,7 @@ export default function DrawPage() {
             label="Objects"
 
             cards={objectCards}
-            maxPicks={3}
+            maxPicks={2}
             onSelectionChange={setSelectedObjects}
           />
         </div>

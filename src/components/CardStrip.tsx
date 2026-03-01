@@ -38,7 +38,7 @@ export default function CardStrip({ wordIds, colorIds, objectIds }: CardStripPro
   const thumbLabel = (text: string, dark?: boolean) => (
     <div className="absolute inset-x-0 bottom-0 pb-1 text-center">
       <span
-        className={`text-[11px] leading-none tracking-wide sm:text-[10px] ${dark ? "text-black/60" : "text-white/80"}`}
+        className={`text-[11px] leading-none tracking-wide sm:text-xs ${dark ? "text-black/60" : "text-white/80"}`}
         style={{ fontFamily: "var(--font-cormorant)", textShadow: dark ? "none" : "0 1px 3px rgba(0,0,0,0.9)" }}
       >
         {text}
@@ -122,12 +122,12 @@ export default function CardStrip({ wordIds, colorIds, objectIds }: CardStripPro
         <div className="h-px flex-1 bg-white/10" />
       </div>
 
-      {/* 9-card strip — 3×3 grid on mobile, single row on desktop */}
-      <div className="mx-auto mb-10 grid max-w-[280px] grid-cols-3 justify-items-center gap-2 sm:flex sm:max-w-none sm:justify-center">
+      {/* 6-card strip — 3×2 grid on mobile, single row on desktop */}
+      <div className="mx-auto mb-10 grid max-w-[320px] grid-cols-3 justify-items-center gap-3 sm:flex sm:max-w-none sm:justify-center">
         {allCards.map((entry) => (
           <motion.div
             key={entry.card.id}
-            className="aspect-[5/7] w-full cursor-pointer overflow-hidden rounded border border-white/10 sm:h-[96px] sm:w-[68px] sm:aspect-auto"
+            className="aspect-[5/7] w-full cursor-pointer overflow-hidden rounded-lg border border-white/10 sm:h-[140px] sm:w-[100px] sm:aspect-auto"
             style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.5)" }}
             whileHover={{ scale: 1.3, zIndex: 10 }}
             whileTap={{ scale: 1.2 }}

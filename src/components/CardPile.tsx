@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import Card from "./Card";
 import CardCarousel from "./CardCarousel";
 import { shuffle } from "@/lib/shuffle";
-import { useIsMobile } from "@/lib/useIsMobile";
 
 interface CardPileProps<T> {
   label: string;
@@ -22,7 +21,6 @@ export default function CardPile<T extends { id: string }>({
 }: CardPileProps<T>) {
   const shuffled = useMemo(() => shuffle(cards), [cards]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const isMobile = useIsMobile();
 
   const isFull = selectedIds.size >= maxPicks;
   const totalCards = shuffled.length;
@@ -62,71 +60,73 @@ export default function CardPile<T extends { id: string }>({
         </h2>
       </div>
 
-      {isMobile ? (
+      {/* Mobile: carousel (hidden on sm+) */}
+      <div className="w-full sm:hidden">
         <CardCarousel
           cards={shuffled}
           selectedIds={selectedIds}
           isFull={isFull}
           onToggle={toggleCard}
         />
-      ) : (
+      </div>
+
+      {/* Desktop: fan layout (hidden below sm) */}
+      <div
+        className="relative mx-auto hidden overflow-visible sm:block"
+        style={{
+          height: "320px",
+          width: "100%",
+          maxWidth: `${fanWidth}px`,
+        }}
+      >
         <div
-          className="relative mx-auto overflow-visible"
+          className="absolute left-1/2"
           style={{
+            width: `${fanWidth}px`,
             height: "320px",
-            width: "100%",
-            maxWidth: `${fanWidth}px`,
+            transform: "translateX(-50%)",
           }}
         >
-          <div
-            className="absolute left-1/2"
-            style={{
-              width: `${fanWidth}px`,
-              height: "320px",
-              transform: "translateX(-50%)",
-            }}
-          >
-            {shuffled.map((card, i) => {
-              const t = totalCards > 1 ? i / (totalCards - 1) : 0.5;
-              const rotation = t * maxSpread - halfSpread;
-              const normalizedPos = (t - 0.5) * 2;
-              const arcY = normalizedPos * normalizedPos * 20;
-              const isSelected = selectedIds.has(card.id);
+          {shuffled.map((card, i) => {
+            const t = totalCards > 1 ? i / (totalCards - 1) : 0.5;
+            const rotation = t * maxSpread - halfSpread;
+            const normalizedPos = (t - 0.5) * 2;
+            const arcY = normalizedPos * normalizedPos * 20;
+            const isSelected = selectedIds.has(card.id);
 
-              return (
-                <motion.div
-                  key={card.id}
-                  className="absolute"
-                  style={{
-                    left: `${i * cardSpacing}px`,
-                    top: "50px",
-                    zIndex: isSelected ? 50 : i,
-                    transformOrigin: "bottom center",
-                  }}
-                  initial={false}
-                  animate={{
-                    rotate: isSelected ? 0 : rotation,
-                    y: isSelected ? -20 : arcY,
-                    scale: isSelected ? 1.08 : 1,
-                  }}
-                  whileHover={
-                    !isSelected && !(isFull && !isSelected)
-                      ? { y: arcY - 25, scale: 1.04, rotate: rotation * 0.3 }
-                      : undefined
-                  }
-                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                >
-                  <Card
-                    selected={isSelected}
-                    onSelect={() => toggleCard(card)}
-                    disabled={isFull}
-                  />
-                </motion.div>
-              );
-            })}
-          </div>
+            return (
+              <motion.div
+                key={card.id}
+                className="absolute"
+                style={{
+                  left: `${i * cardSpacing}px`,
+                  top: "50px",
+                  zIndex: isSelected ? 50 : i,
+                  transformOrigin: "bottom center",
+                }}
+                initial={false}
+                animate={{
+                  rotate: isSelected ? 0 : rotation,
+                  y: isSelected ? -20 : arcY,
+                  scale: isSelected ? 1.08 : 1,
+                }}
+                whileHover={
+                  !isSelected && !(isFull && !isSelected)
+                    ? { y: arcY - 25, scale: 1.04, rotate: rotation * 0.3 }
+                    : undefined
+                }
+                transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              >
+                <Card
+                  selected={isSelected}
+                  onSelect={() => toggleCard(card)}
+                  disabled={isFull}
+                />
+              </motion.div>
+            );
+          })}
         </div>
-      )}
+      </div>
 
       {/* Always reserve space for counter to prevent layout shift */}
       <p

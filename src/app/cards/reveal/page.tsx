@@ -39,12 +39,12 @@ function RevealContent() {
   const [result, setResult] = useState<ReflectionResult | null>(null);
   const [copied, setCopied] = useState(false);
 
-  const allRevealed = revealedCount >= 9;
+  const allRevealed = revealedCount >= 6;
   const isCompact = result !== null;
 
   // Auto-flip cards sequentially
   useEffect(() => {
-    if (revealedCount >= 9) return;
+    if (revealedCount >= 6) return;
     const timer = setTimeout(
       () => setRevealedCount((c) => c + 1),
       revealedCount === 0 ? 800 : 600
@@ -61,7 +61,7 @@ function RevealContent() {
   }, [result]);
 
   // Redirect if missing cards — if URL was already replaced to a result page, do a hard redirect
-  if (words.length !== 3 || colors.length !== 3 || objects.length !== 3) {
+  if (words.length !== 2 || colors.length !== 2 || objects.length !== 2) {
     const resultMatch = window.location.pathname.match(/^\/cards\/result\/(.+)$/);
     if (resultMatch) {
       window.location.reload();
@@ -181,14 +181,14 @@ function RevealContent() {
               <div className="mb-12">
                 <h2 className="mb-4 text-center text-lg tracking-wide text-white/50" style={{ fontFamily: "var(--font-cormorant)" }}>Colors</h2>
                 <div className="flex justify-center gap-4">
-                  {colors.map((card, i) => <FlipCard key={card.id} flipped={revealedCount > i + 3} delay={0} front={renderColorFront(card)} />)}
+                  {colors.map((card, i) => <FlipCard key={card.id} flipped={revealedCount > i + 2} delay={0} front={renderColorFront(card)} />)}
                 </div>
               </div>
 
               <div className="mb-12">
                 <h2 className="mb-4 text-center text-lg tracking-wide text-white/50" style={{ fontFamily: "var(--font-cormorant)" }}>Objects</h2>
                 <div className="flex justify-center gap-4">
-                  {objects.map((card, i) => <FlipCard key={card.id} flipped={revealedCount > i + 6} delay={0} front={renderObjectFront(card)} />)}
+                  {objects.map((card, i) => <FlipCard key={card.id} flipped={revealedCount > i + 4} delay={0} front={renderObjectFront(card)} />)}
                 </div>
               </div>
 
