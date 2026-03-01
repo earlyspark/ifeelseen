@@ -42,9 +42,9 @@ export const metadata: Metadata = {
     url: "https://ifeelseen.ai",
     images: [
       {
-        url: "https://ifeelseen.ai/card-back.jpg",
-        width: 1024,
-        height: 1536,
+        url: "https://ifeelseen.ai/card-back-og.jpg",
+        width: 630,
+        height: 630,
         alt: "I Feel Seen",
       },
     ],
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "I Feel Seen",
     description: "Pick from three hidden piles. Receive a reflection about where you are right now.",
-    images: ["https://ifeelseen.ai/card-back.jpg"],
+    images: ["https://ifeelseen.ai/card-back-og.jpg"],
   },
 };
 

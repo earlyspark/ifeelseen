@@ -43,7 +43,7 @@ export async function generateMetadata({
       ? result.encouragingNote.slice(0, 157) + "..."
       : result.encouragingNote;
 
-  const ogImageUrl = `/api/og?id=${id}`;
+  const ogImageUrl = `https://ifeelseen.ai/api/og?id=${id}`;
 
   return {
     title: `${title} — I Feel Seen`,
