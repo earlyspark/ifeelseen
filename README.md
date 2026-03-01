@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# I Feel Seen
 
-## Getting Started
+A card-drawing web experience where you pick from three hidden piles — words, colors, objects — and receive a personal reflection grounded in timeless wisdom.
 
-First, run the development server:
+**Live:** [ifeelseen.ai](https://ifeelseen.ai)
+
+---
+
+## What it does
+
+Draw nine cards without thinking. Watch what you chose. Receive a reflection written specifically for your combination — an interpretation of where you are right now, an insight that names what's underneath, and an encouraging note grounded in wisdom for hard seasons.
+
+Results are saved with a unique link so you can share or return to them.
+
+---
+
+## Tech stack
+
+- **Next.js** (App Router) — server rendering, dynamic OG metadata, API routes
+- **Tailwind CSS** — styling
+- **Framer Motion** — card flip animations
+- **Anthropic SDK** — AI reflection generation via Claude
+- **Upstash Redis** — result permalink storage
+- **Vercel** — deployment (auto-deploys on push to `main`)
+
+---
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file with:
 
-## Learn More
+```
+ANTHROPIC_API_KEY=
+KV_REST_API_URL=
+KV_REST_API_TOKEN=
+```
 
-To learn more about Next.js, take a look at the following resources:
+`NEXT_PUBLIC_GA_MEASUREMENT_ID` is set in Vercel for production only — omit from `.env.local` so analytics don't fire locally.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project structure
 
-## Deploy on Vercel
+```
+src/
+├── app/
+│   ├── api/cards/generate/   # AI reflection API route
+│   ├── api/og/               # Dynamic OG image generation
+│   ├── cards/                # Draw and reveal pages
+│   ├── cards/result/[id]/    # Shareable result permalink
+│   └── page.tsx              # Landing page
+├── components/               # Card UI components
+└── lib/                      # Card data and utilities
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Push to `main` — Vercel deploys automatically.

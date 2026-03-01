@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import { Cormorant_Garamond } from "next/font/google";
 import CookieConsent from "@/components/CookieConsent";
@@ -15,9 +15,37 @@ const cormorant = Cormorant_Garamond({
   weight: ["300", "400", "500"],
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
   title: "I Feel Seen",
-  description: "A card-drawing experience that meets you exactly where you are. Known before you knew to ask.",
+  description: "Pick from three hidden piles and receive a personal reflection for your current moment.",
+  keywords: [
+    "I feel seen",
+    "feeling lost and unknown",
+    "feeling unseen",
+    "card reading without divination",
+    "encouraging words for hard times",
+    "meaningful reflection",
+    "stoic encouragement",
+    "wisdom for hard seasons",
+    "feeling understood",
+    "card draw reflection",
+  ],
+  openGraph: {
+    title: "I Feel Seen",
+    description: "Pick from three hidden piles. Receive a reflection about where you are right now.",
+    type: "website",
+    url: "https://ifeelseen.ai",
+  },
+  twitter: {
+    card: "summary",
+    title: "I Feel Seen",
+    description: "Pick from three hidden piles. Receive a reflection about where you are right now.",
+  },
 };
 
 export default function RootLayout({
