@@ -8,7 +8,7 @@ A card-drawing web experience where you pick from three hidden piles — words, 
 
 ## What it does
 
-Draw nine cards without thinking. Watch what you chose. Receive a reflection written specifically for your combination — an interpretation of where you are right now, an insight that names what's underneath, and an encouraging note grounded in wisdom for hard seasons.
+Draw six cards without thinking — two words, two colors, two objects. Watch what you chose. Receive a reflection written specifically for your combination — an interpretation of where you are right now, an insight that names what's underneath, and an encouraging note grounded in wisdom for hard seasons.
 
 Results are saved with a unique link so you can share or return to them.
 

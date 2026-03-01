@@ -122,6 +122,19 @@ export default function Home() {
           For the 2am search. The quiet grief. The present moment that you don&apos;t have words for yet.
         </p>
       </div>
+
+      {/* Footer */}
+      <footer className="mt-16">
+        <a
+          href="https://blog.earlyspark.com/p/i-built-an-ai-based-pick-a-card-app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-white/20 transition-colors hover:text-white/40"
+          style={{ fontFamily: "var(--font-cormorant)" }}
+        >
+          How this was built
+        </a>
+      </footer>
     </main>
   );
 }
