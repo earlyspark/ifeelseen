@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
   // Load Cormorant Garamond font
   const fontData = await fetch(
-    new URL("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3YmX5slCNuHLi8bLeY9MK7whWMhyjYrEtFmSu5.woff2")
+    "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_v86KnTOitk9IfqxUQ.woff2"
   ).then((res) => res.arrayBuffer());
 
   const encouragingExcerpt =
