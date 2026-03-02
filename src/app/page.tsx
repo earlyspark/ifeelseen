@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-[#0e0e0e] px-6 py-16 text-center">
+    <main id="main-content" className="flex min-h-screen flex-col items-center justify-center bg-[#0e0e0e] px-6 py-16 text-center">
       {/* Wordmark */}
       <div className="relative flex flex-col items-center">
         <img
@@ -22,7 +22,7 @@ export default function Home() {
         >
           I Feel Seen
         </h1>
-        <p className="relative z-10 mt-4 text-sm text-white/40">
+        <p className="relative z-10 mt-4 text-sm text-white/60">
           Choose what you need today.
         </p>
       </div>
@@ -180,7 +180,7 @@ export default function Home() {
           href="https://blog.earlyspark.com/p/i-built-an-ai-based-pick-a-card-app"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-white/20 transition-colors hover:text-white/40"
+          className="text-xs text-white/50 transition-colors hover:text-white/70"
           style={{ fontFamily: "var(--font-cormorant)" }}
         >
           How this was built

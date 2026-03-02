@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   questions,
   colorCards,
@@ -16,8 +16,8 @@ import {
 const BG = "#f5f0e8";
 const TEXT_PRIMARY = "#2a2520";
 const TEXT_SECONDARY = "#5c544a";
-const TEXT_MUTED = "#8a8078";
-const ACCENT = "#c47c5a";
+const TEXT_MUTED = "#6b6259";
+const ACCENT = "#a55e3e";
 const CARD_BG = "#ffffff";
 const CARD_BORDER = "#e8e0d4";
 const PROGRESS_BG = "#e0d8cc";
@@ -32,6 +32,8 @@ const cormorant = { fontFamily: "var(--font-cormorant)" };
 
 export default function QuizFlow() {
   const router = useRouter();
+  const shouldReduceMotion = useReducedMotion();
+  const stepRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState<Step>({ type: "question", index: 0 });
   // Track selected answer index per question (null = unanswered)
   const [selections, setSelections] = useState<(number | null)[]>(
@@ -167,23 +169,30 @@ export default function QuizFlow() {
     step.type === "question" && selections[step.index] !== null;
 
   // Animation variants
-  const slideVariants = {
-    enter: (d: number) => ({
-      x: d > 0 ? 80 : -80,
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (d: number) => ({
-      x: d > 0 ? -80 : 80,
-      opacity: 0,
-    }),
-  };
+  const slideVariants = shouldReduceMotion
+    ? {
+        enter: { opacity: 0, x: 0 },
+        center: { opacity: 1, x: 0 },
+        exit: { opacity: 0, x: 0 },
+      }
+    : {
+        enter: (d: number) => ({
+          x: d > 0 ? 80 : -80,
+          opacity: 0,
+        }),
+        center: {
+          x: 0,
+          opacity: 1,
+        },
+        exit: (d: number) => ({
+          x: d > 0 ? -80 : 80,
+          opacity: 0,
+        }),
+      };
 
   return (
     <main
+      id="main-content"
       className="min-h-screen px-4 py-12 sm:px-6"
       style={{ backgroundColor: BG }}
     >
@@ -207,19 +216,26 @@ export default function QuizFlow() {
             <p
               className="mb-2 text-center text-sm tracking-widest uppercase"
               style={{ color: ACCENT }}
+              aria-live="polite"
+              aria-atomic="true"
             >
               Question {questionNumber} of {totalSteps}
             </p>
             <div
               className="h-1 w-full overflow-hidden rounded-full"
               style={{ backgroundColor: PROGRESS_BG }}
+              role="progressbar"
+              aria-valuenow={questionNumber}
+              aria-valuemin={1}
+              aria-valuemax={totalSteps}
+              aria-label="Quiz progress"
             >
               <motion.div
                 className="h-full rounded-full"
                 style={{ backgroundColor: ACCENT }}
                 initial={false}
                 animate={{ width: `${(questionNumber / totalSteps) * 100}%` }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.4, ease: "easeOut" }}
               />
             </div>
           </div>
@@ -256,12 +272,18 @@ export default function QuizFlow() {
           {step.type === "question" && (
             <motion.div
               key={`q-${step.index}`}
+              ref={stepRef}
+              tabIndex={-1}
+              className="outline-none"
               custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"
               exit="exit"
               transition={{ duration: 0.3, ease: "easeOut" }}
+              onAnimationComplete={(def) => {
+                if (def === "center") stepRef.current?.focus();
+              }}
             >
               <QuestionScreen
                 question={questions[step.index]}
@@ -274,14 +296,20 @@ export default function QuizFlow() {
           {step.type === "colorPick" && (
             <motion.div
               key="colorPick"
+              ref={stepRef}
+              tabIndex={-1}
+              className="outline-none"
               custom={direction}
               variants={slideVariants}
               initial="enter"
               animate="center"
               exit="exit"
               transition={{ duration: 0.3, ease: "easeOut" }}
+              onAnimationComplete={(def) => {
+                if (def === "center") stepRef.current?.focus();
+              }}
             >
-              <ColorPickScreen onSelect={handleColorSelect} />
+              <ColorPickScreen onSelect={handleColorSelect} reduceMotion={!!shouldReduceMotion} />
             </motion.div>
           )}
 
@@ -308,6 +336,7 @@ export default function QuizFlow() {
               className="flex flex-col items-center pt-20 text-center"
             >
               <p
+                role="status"
                 className="text-xl font-light tracking-wide"
                 style={{ ...cormorant, color: TEXT_SECONDARY }}
               >
@@ -376,20 +405,27 @@ function QuestionScreen({
 
 function ColorPickScreen({
   onSelect,
+  reduceMotion,
 }: {
   onSelect: (colorId: string) => void;
+  reduceMotion: boolean;
 }) {
   const [flippedCount, setFlippedCount] = useState(0);
 
   // Flip cards one by one: short initial pause, then stagger each card
+  // When reduced motion, reveal all instantly
   useEffect(() => {
+    if (reduceMotion) {
+      setFlippedCount(colorCards.length);
+      return;
+    }
     if (flippedCount >= colorCards.length) return;
     const delay = flippedCount === 0 ? 400 : 190;
     const timer = setTimeout(() => {
       setFlippedCount((c) => c + 1);
     }, delay);
     return () => clearTimeout(timer);
-  }, [flippedCount]);
+  }, [flippedCount, reduceMotion]);
 
   return (
     <div>
@@ -405,6 +441,54 @@ function ColorPickScreen({
       <div className="mt-8 grid grid-cols-4 gap-2 sm:gap-3">
         {colorCards.map((card, i) => {
           const isFlipped = i < flippedCount;
+
+          if (reduceMotion) {
+            // Crossfade instead of 3D flip
+            return (
+              <div
+                key={card.id}
+                onClick={isFlipped ? () => onSelect(card.id) : undefined}
+                className={isFlipped ? "cursor-pointer" : ""}
+                role={isFlipped ? "button" : undefined}
+                aria-label={isFlipped ? card.name : undefined}
+                tabIndex={isFlipped ? 0 : -1}
+                onKeyDown={
+                  isFlipped
+                    ? (e) => {
+                        if (e.key === "Enter" || e.key === " ")
+                          onSelect(card.id);
+                      }
+                    : undefined
+                }
+              >
+                <div
+                  className="relative w-full rounded-xl"
+                  style={{ aspectRatio: "2/3" }}
+                >
+                  <div
+                    className="absolute inset-0 overflow-hidden rounded-xl border border-black/20"
+                    style={{ opacity: isFlipped ? 0 : 1, transition: "opacity 0.15s" }}
+                  >
+                    <img
+                      src="/card-back-careerquiz-color.png"
+                      alt=""
+                      className="h-full w-full object-cover"
+                      draggable={false}
+                    />
+                  </div>
+                  <div
+                    className="absolute inset-0 rounded-xl border border-black/20"
+                    style={{
+                      opacity: isFlipped ? 1 : 0,
+                      transition: "opacity 0.15s",
+                      backgroundColor: card.hex,
+                    }}
+                  />
+                </div>
+              </div>
+            );
+          }
+
           return (
             <div
               key={card.id}

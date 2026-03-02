@@ -67,6 +67,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${cormorant.variable} antialiased`}
       >
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-4 focus:left-4 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black focus:shadow-lg"
+        >
+          Skip to main content
+        </a>
         {children}
         <CookieConsent />
       </body>

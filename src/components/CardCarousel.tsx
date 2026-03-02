@@ -8,6 +8,7 @@ interface CardCarouselProps<T> {
   selectedIds: Set<string>;
   isFull: boolean;
   onToggle: (card: T) => void;
+  pileLabel: string;
 }
 
 export default function CardCarousel<T extends { id: string }>({
@@ -15,6 +16,7 @@ export default function CardCarousel<T extends { id: string }>({
   selectedIds,
   isFull,
   onToggle,
+  pileLabel,
 }: CardCarouselProps<T>) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -82,15 +84,18 @@ export default function CardCarousel<T extends { id: string }>({
       {/* Cards */}
       <div
         ref={scrollRef}
+        id="card-carousel-scroll"
+        aria-label={`${pileLabel} cards`}
         className="hide-scrollbar flex w-full gap-3 overflow-x-auto px-8 pb-3 pt-4"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
-        {cards.map((card) => (
+        {cards.map((card, i) => (
           <div key={card.id} className="shrink-0">
             <Card
               selected={selectedIds.has(card.id)}
               onSelect={() => onToggle(card)}
               disabled={isFull}
+              label={`${pileLabel} card ${i + 1} of ${cards.length}`}
             />
           </div>
         ))}
@@ -99,6 +104,12 @@ export default function CardCarousel<T extends { id: string }>({
       {/* Custom scroll track — always visible, draggable */}
       <div
         ref={trackRef}
+        role="scrollbar"
+        aria-controls="card-carousel-scroll"
+        aria-valuenow={Math.round(scrollProgress * 100)}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Scroll cards"
         className="mx-8 h-8 cursor-pointer touch-none rounded-full"
         onPointerDown={handleTrackPointerDown}
         onPointerMove={handleTrackPointerMove}

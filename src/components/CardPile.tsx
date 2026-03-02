@@ -67,6 +67,7 @@ export default function CardPile<T extends { id: string }>({
           selectedIds={selectedIds}
           isFull={isFull}
           onToggle={toggleCard}
+          pileLabel={label}
         />
       </div>
 
@@ -121,6 +122,7 @@ export default function CardPile<T extends { id: string }>({
                   selected={isSelected}
                   onSelect={() => toggleCard(card)}
                   disabled={isFull}
+                  label={`${label} card ${i + 1} of ${totalCards}`}
                 />
               </motion.div>
             );

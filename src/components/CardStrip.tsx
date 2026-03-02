@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   findWordCards,
   findColorCards,
@@ -27,7 +27,36 @@ export default function CardStrip({ wordIds, colorIds, objectIds }: CardStripPro
   const colors = findColorCards(colorIds);
   const objects = findObjectCards(objectIds);
 
+  const shouldReduceMotion = useReducedMotion();
   const [zoomedCard, setZoomedCard] = useState<CardEntry | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const openModal = useCallback((entry: CardEntry) => {
+    previousFocusRef.current = document.activeElement as HTMLElement;
+    setZoomedCard(entry);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setZoomedCard(null);
+    // Restore focus after state update
+    setTimeout(() => {
+      previousFocusRef.current?.focus();
+    }, 0);
+  }, []);
+
+  // Move focus into modal on open & listen for Escape
+  useEffect(() => {
+    if (!zoomedCard) return;
+    const el = modalRef.current;
+    if (el) el.focus();
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeModal();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [zoomedCard, closeModal]);
 
   const allCards: CardEntry[] = [
     ...words.map((c) => ({ type: "word" as const, card: c })),
@@ -116,7 +145,7 @@ export default function CardStrip({ wordIds, colorIds, objectIds }: CardStripPro
       {/* "your cards" divider */}
       <div className="mb-6 flex items-center gap-4">
         <div className="h-px flex-1 bg-white/10" />
-        <span className="text-sm tracking-[0.2em] text-white/30" style={{ fontFamily: "var(--font-cormorant)" }}>
+        <span className="text-sm tracking-[0.2em] text-white/50" style={{ fontFamily: "var(--font-cormorant)" }}>
           your cards
         </span>
         <div className="h-px flex-1 bg-white/10" />
@@ -124,27 +153,42 @@ export default function CardStrip({ wordIds, colorIds, objectIds }: CardStripPro
 
       {/* 6-card strip — 3×2 grid on mobile, single row on desktop */}
       <div className="mx-auto mb-10 grid max-w-[320px] grid-cols-3 justify-items-center gap-3 sm:flex sm:max-w-none sm:justify-center">
-        {allCards.map((entry) => (
-          <motion.div
-            key={entry.card.id}
-            className="aspect-[5/7] w-full cursor-pointer overflow-hidden rounded-lg border border-white/10 sm:h-[140px] sm:w-[100px] sm:aspect-auto"
-            style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.5)" }}
-            whileHover={{ scale: 1.3, zIndex: 10 }}
-            whileTap={{ scale: 1.2 }}
-            transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            onClick={() => setZoomedCard(entry)}
-          >
-            {entry.type === "word" && renderWordThumb(entry.card)}
-            {entry.type === "color" && renderColorThumb(entry.card)}
-            {entry.type === "object" && renderObjectThumb(entry.card)}
-          </motion.div>
-        ))}
+        {allCards.map((entry) => {
+          const cardName =
+            entry.type === "word" ? entry.card.word :
+            entry.type === "color" ? entry.card.name :
+            entry.card.object;
+          return (
+            <motion.div
+              key={entry.card.id}
+              role="button"
+              tabIndex={0}
+              aria-label={`View ${cardName} card`}
+              className="aspect-[5/7] w-full cursor-pointer overflow-hidden rounded-lg border border-white/10 sm:h-[140px] sm:w-[100px] sm:aspect-auto"
+              style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.5)" }}
+              whileHover={{ scale: shouldReduceMotion ? 1 : 1.3, zIndex: 10 }}
+              whileTap={{ scale: shouldReduceMotion ? 1 : 1.2 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+              onClick={() => openModal(entry)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  openModal(entry);
+                }
+              }}
+            >
+              {entry.type === "word" && renderWordThumb(entry.card)}
+              {entry.type === "color" && renderColorThumb(entry.card)}
+              {entry.type === "object" && renderObjectThumb(entry.card)}
+            </motion.div>
+          );
+        })}
       </div>
 
       {/* Divider */}
       <div className="mb-10 flex items-center gap-4">
         <div className="h-px flex-1 bg-white/10" />
-        <span className="text-sm tracking-[0.2em] text-white/30" style={{ fontFamily: "var(--font-cormorant)" }}>
+        <span className="text-sm tracking-[0.2em] text-white/50" style={{ fontFamily: "var(--font-cormorant)" }}>
           your reflection
         </span>
         <div className="h-px flex-1 bg-white/10" />
@@ -154,23 +198,29 @@ export default function CardStrip({ wordIds, colorIds, objectIds }: CardStripPro
       <AnimatePresence>
         {zoomedCard && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+            ref={modalRef}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${zoomedCard.type === "word" ? zoomedCard.card.word : zoomedCard.type === "color" ? zoomedCard.card.name : zoomedCard.card.object} card`}
+            tabIndex={-1}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm outline-none"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            onClick={() => setZoomedCard(null)}
+            onClick={closeModal}
           >
             <motion.div
               className="relative overflow-hidden rounded-xl border border-white/10"
               style={{ width: "min(280px, 75vw)", aspectRatio: "5/7", boxShadow: "0 8px 40px rgba(0,0,0,0.6)" }}
-              initial={{ scale: 0.7, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.7, opacity: 0 }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
+              initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0.7, opacity: 0 }}
+              animate={shouldReduceMotion ? { opacity: 1 } : { scale: 1, opacity: 1 }}
+              exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0.7, opacity: 0 }}
+              transition={shouldReduceMotion ? { duration: 0.15 } : { type: "spring", stiffness: 300, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
             >
               {renderModalCard(zoomedCard)}
+              <button onClick={closeModal} className="sr-only">Close</button>
             </motion.div>
           </motion.div>
         )}

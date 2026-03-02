@@ -35,7 +35,7 @@ export default function DrawPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#0e0e0e] px-4 py-12 sm:px-6">
+    <main id="main-content" className="min-h-screen bg-[#0e0e0e] px-4 py-12 sm:px-6">
       <div className="mx-auto max-w-4xl">
         <div className="mb-12 text-center">
           <h1
@@ -44,7 +44,7 @@ export default function DrawPage() {
           >
             Pick without thinking.
           </h1>
-          <p className="mt-2 text-sm text-white/40">
+          <p className="mt-2 text-sm text-white/60">
             Pick 2 from each pile. Don&apos;t overthink it.
           </p>
         </div>
@@ -75,6 +75,10 @@ export default function DrawPage() {
           />
         </div>
 
+        <div aria-live="polite" className="sr-only">
+          {allPicked ? "All cards selected. Tap Reveal to see your reading." : ""}
+        </div>
+
         <AnimatePresence>
           {allPicked && (
             <motion.div
@@ -85,7 +89,7 @@ export default function DrawPage() {
             >
               <button
                 onClick={handleReveal}
-                className="rounded-full border border-[#c9a84c]/30 bg-[#c9a84c]/20 px-10 py-3 text-lg font-medium text-[#c9a84c] backdrop-blur-sm transition-colors hover:bg-[#c9a84c]/30"
+                className="cursor-pointer rounded-full border border-[#c9a84c]/30 bg-[#c9a84c]/20 px-10 py-3 text-lg font-medium text-[#c9a84c] backdrop-blur-sm transition-colors hover:bg-[#c9a84c]/30"
                 style={{ fontFamily: "var(--font-cormorant)" }}
               >
                 Reveal
@@ -98,7 +102,7 @@ export default function DrawPage() {
       <footer className="mt-20 pb-24 text-center">
         <Link
           href="/"
-          className="text-xs text-white/20 transition-colors hover:text-white/40"
+          className="text-xs text-white/50 transition-colors hover:text-white/70"
           style={{ fontFamily: "var(--font-cormorant)" }}
         >
           I Feel Seen

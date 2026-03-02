@@ -1,19 +1,23 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 interface CardProps {
   selected: boolean;
   onSelect: () => void;
   disabled: boolean;
+  label?: string;
 }
 
-export default function Card({ selected, onSelect, disabled }: CardProps) {
+export default function Card({ selected, onSelect, disabled, label }: CardProps) {
+  const shouldReduceMotion = useReducedMotion();
   return (
     <motion.button
       onClick={onSelect}
       disabled={disabled && !selected}
-      whileTap={!disabled || selected ? { scale: 0.95 } : undefined}
+      aria-label={label}
+      aria-pressed={selected}
+      whileTap={!disabled || selected ? { scale: shouldReduceMotion ? 1 : 0.95 } : undefined}
       transition={{ type: "spring", stiffness: 300, damping: 25 }}
       className={`
         relative h-[200px] w-[140px] rounded-xl
@@ -28,7 +32,7 @@ export default function Card({ selected, onSelect, disabled }: CardProps) {
       <div className="h-full w-full overflow-hidden rounded-xl border border-white/15 bg-[#0e0e0e]">
         <img
           src="/card-back.jpg"
-          alt="Card"
+          alt=""
           className="h-full w-full object-cover"
           draggable={false}
         />
@@ -36,8 +40,9 @@ export default function Card({ selected, onSelect, disabled }: CardProps) {
 
       {selected && (
         <motion.div
-          initial={{ scale: 0 }}
+          initial={shouldReduceMotion ? { scale: 1 } : { scale: 0 }}
           animate={{ scale: 1 }}
+          aria-hidden="true"
           className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-[#c9a84c] text-xs font-bold text-[#0e0e0e]"
         >
           ✓

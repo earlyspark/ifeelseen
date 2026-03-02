@@ -36,7 +36,7 @@ export default function ResultActions({ id }: { id: string }) {
       </button>
       <Link
         href="/cards"
-        className="text-sm text-white/30 underline underline-offset-2 hover:text-white/50"
+        className="text-sm text-white/50 underline underline-offset-2 hover:text-white/70"
         style={{ fontFamily: "var(--font-cormorant)" }}
       >
         Draw again
