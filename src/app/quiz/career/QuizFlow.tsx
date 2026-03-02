@@ -52,10 +52,37 @@ export default function QuizFlow() {
 
   // Calculate and redirect when in calculating state
   useEffect(() => {
-    if (step.type === "calculating") {
+    if (step.type !== "calculating") return;
+
+    async function resolveArchetype() {
+      // Build answer pairs for the API
+      const answers = questions
+        .map((q, i) => ({
+          question: q.question,
+          answer: selections[i] !== null ? q.answers[selections[i]!].text : null,
+        }))
+        .filter((a): a is { question: string; answer: string } => a.answer !== null);
+
+      const colorCard = colorCards.find((c) => c.id === selectedColor);
+
+      try {
+        const res = await fetch("/api/quiz/career/result", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ answers, colorCard: colorCard?.name ?? null }),
+        });
+        if (res.ok) {
+          const { archetype } = await res.json();
+          router.push(`/quiz/career/result/${archetype}`);
+          return;
+        }
+      } catch {
+        // Fall through to local scoring
+      }
+
+      // Fallback: local score-based determination
       const allScores: AxisScores[] = [];
       const tiebreakers: string[] = [];
-
       for (let i = 0; i < questions.length; i++) {
         const sel = selections[i];
         if (sel !== null) {
@@ -64,22 +91,16 @@ export default function QuizFlow() {
           if (answer.tiebreaker) tiebreakers.push(answer.tiebreaker);
         }
       }
-
-      if (selectedColor) {
-        const card = colorCards.find((c) => c.id === selectedColor);
-        if (card) {
-          allScores.push(card.scores);
-          if (card.tiebreaker) tiebreakers.push(card.tiebreaker);
-        }
+      if (colorCard) {
+        allScores.push(colorCard.scores);
+        if (colorCard.tiebreaker) tiebreakers.push(colorCard.tiebreaker);
       }
-
       const scores = accumulateScores(allScores);
       const archetype = determineArchetype(scores, tiebreakers);
-      const timer = setTimeout(() => {
-        router.push(`/quiz/career/result/${archetype.slug}`);
-      }, 800);
-      return () => clearTimeout(timer);
+      router.push(`/quiz/career/result/${archetype.slug}`);
     }
+
+    resolveArchetype();
   }, [step, selections, selectedColor, router]);
 
   const handleSelectAnswer = useCallback(
@@ -128,11 +149,13 @@ export default function QuizFlow() {
   }, [step]);
 
   // Current question number (1-based) for progress bar
+  const totalSteps = questions.length + 1; // questions + color card
+
   const questionNumber =
     step.type === "question"
       ? step.index + 1
       : step.type === "colorPick" || step.type === "colorReveal"
-        ? 10
+        ? totalSteps
         : null;
 
   const showBackButton =
@@ -185,7 +208,7 @@ export default function QuizFlow() {
               className="mb-2 text-center text-sm tracking-widest uppercase"
               style={{ color: ACCENT }}
             >
-              Question {questionNumber} of 10
+              Question {questionNumber} of {totalSteps}
             </p>
             <div
               className="h-1 w-full overflow-hidden rounded-full"
@@ -195,7 +218,7 @@ export default function QuizFlow() {
                 className="h-full rounded-full"
                 style={{ backgroundColor: ACCENT }}
                 initial={false}
-                animate={{ width: `${(questionNumber / 10) * 100}%` }}
+                animate={{ width: `${(questionNumber / totalSteps) * 100}%` }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
               />
             </div>

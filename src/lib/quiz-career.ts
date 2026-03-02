@@ -66,7 +66,7 @@ export const questions: QuizQuestion[] = [
       },
       {
         label: "B",
-        text: "Helping someone through something hard",
+        text: "Helping someone through something difficult",
         scores: { relating: 2, feeling: 2 },
       },
       {
@@ -114,7 +114,7 @@ export const questions: QuizQuestion[] = [
       {
         label: "A",
         text: "Help solving a problem or figuring something out",
-        scores: { thinking: 2, structured: 1 },
+        scores: { thinking: 2, structured: 1, individual: 1 },
       },
       {
         label: "B",
@@ -140,7 +140,7 @@ export const questions: QuizQuestion[] = [
       {
         label: "A",
         text: "Something you made changes how people see the world",
-        scores: { making: 2, fluid: 2 },
+        scores: { making: 2, fluid: 2, individual: 1 },
       },
       {
         label: "B",
@@ -181,7 +181,7 @@ export const questions: QuizQuestion[] = [
       {
         label: "D",
         text: "Being told what to make or how to express something",
-        scores: { making: 2, fluid: 2 },
+        scores: { making: 2, fluid: 2, individual: 1 },
       },
     ],
   },
@@ -208,7 +208,7 @@ export const questions: QuizQuestion[] = [
       {
         label: "D",
         text: "Doing something that matters \u2014 volunteering, advocating, contributing",
-        scores: { community: 2, structured: 1 },
+        scores: { community: 1, structured: 1 },
       },
     ],
   },
@@ -292,9 +292,113 @@ export const questions: QuizQuestion[] = [
       },
     ],
   },
+  {
+    id: 10,
+    question: "When you have to make a hard decision, you tend to:",
+    answers: [
+      {
+        label: "A",
+        text: "Think it through alone until it\u2019s clear",
+        scores: { individual: 2, thinking: 2 },
+      },
+      {
+        label: "B",
+        text: "Talk to the people it affects",
+        scores: { relating: 2, community: 1 },
+      },
+      {
+        label: "C",
+        text: "Trust your gut and move",
+        scores: { fluid: 2, making: 1 },
+      },
+      {
+        label: "D",
+        text: "Map out the options and likely outcomes",
+        scores: { structured: 2, thinking: 1 },
+      },
+    ],
+  },
+  {
+    id: 11,
+    question: "What kind of problem genuinely excites you?",
+    answers: [
+      {
+        label: "A",
+        text: "A human problem \u2014 someone struggling with something real",
+        scores: { relating: 2, feeling: 2 },
+      },
+      {
+        label: "B",
+        text: "A creative problem \u2014 something that doesn\u2019t exist yet",
+        scores: { making: 2, fluid: 2 },
+      },
+      {
+        label: "C",
+        text: "A systems problem \u2014 something broken that could work better",
+        scores: { structured: 2, thinking: 1 },
+      },
+      {
+        label: "D",
+        text: "A knowledge problem \u2014 something no one has fully figured out",
+        scores: { thinking: 2, individual: 2 },
+      },
+    ],
+  },
+  {
+    id: 12,
+    question: "When you\u2019re working on something with a group, you tend to:",
+    answers: [
+      {
+        label: "A",
+        text: "Bring the idea no one else thought of",
+        scores: { making: 2, individual: 1 },
+      },
+      {
+        label: "B",
+        text: "Make sure everyone has what they need to contribute",
+        scores: { relating: 2, community: 2 },
+      },
+      {
+        label: "C",
+        text: "Get into the details and work them out",
+        scores: { thinking: 2, structured: 1 },
+      },
+      {
+        label: "D",
+        text: "Keep people focused on what actually matters",
+        scores: { structured: 2, community: 1 },
+      },
+    ],
+  },
+  {
+    id: 13,
+    question: "What do you find easy that most people seem to find hard?",
+    answers: [
+      {
+        label: "A",
+        text: "Starting something from nothing",
+        scores: { making: 2, fluid: 2 },
+      },
+      {
+        label: "B",
+        text: "Sitting with someone in pain without rushing to fix it",
+        scores: { relating: 2, feeling: 2 },
+      },
+      {
+        label: "C",
+        text: "Staying with something complex for a long time",
+        scores: { thinking: 2, individual: 2 },
+      },
+      {
+        label: "D",
+        text: "Getting very different people to trust each other",
+        scores: { community: 2, relating: 1 },
+      },
+    ],
+  },
 ];
 
-// --- Color Cards (Q10) ---
+// --- Color Cards (Q10 in PRD, now Q15 with 5 additional questions) ---
 
 export const colorCards: ColorCard[] = [
   {
@@ -712,77 +816,53 @@ const AXIS_PAIRS: AxisPair[] = [
   { key: "individualCommunity", poleA: "individual", poleB: "community" },
 ];
 
+// All 16 axis combinations mapped to deliberate archetype slugs.
+// Combos with two matching archetypes use the first as default; tiebreakers override.
+const COMBO_MAP: Record<string, string> = {
+  "making-thinking-structured-individual": "investigator", // tiebreaker → builder
+  "making-thinking-structured-community":  "builder",
+  "making-thinking-fluid-individual":      "visionary",
+  "making-thinking-fluid-community":       "visionary",
+  "making-feeling-structured-individual":  "creator",
+  "making-feeling-structured-community":   "performer",
+  "making-feeling-fluid-individual":       "creator",     // tiebreaker → creator
+  "making-feeling-fluid-community":        "performer",   // tiebreaker → connector
+  "relating-thinking-structured-individual": "advocate",
+  "relating-thinking-structured-community":  "advocate",
+  "relating-thinking-fluid-individual":      "investigator",
+  "relating-thinking-fluid-community":       "advocate",
+  "relating-feeling-structured-individual":  "steward",
+  "relating-feeling-structured-community":   "guide",     // tiebreaker → steward
+  "relating-feeling-fluid-individual":       "healer",
+  "relating-feeling-fluid-community":        "healer",    // tiebreaker → connector
+};
+
 export function determineArchetype(
   scores: Record<AxisPole, number>,
   tiebreakers: string[]
 ): ArchetypeProfile {
   // Determine dominant pole for each axis
   const profile = {} as Record<AxisKey, string>;
-  const margins = {} as Record<AxisKey, number>;
 
   for (const { key, poleA, poleB } of AXIS_PAIRS) {
-    if (scores[poleA] >= scores[poleB]) {
-      profile[key] = poleA;
-      margins[key] = scores[poleA] - scores[poleB];
-    } else {
-      profile[key] = poleB;
-      margins[key] = scores[poleB] - scores[poleA];
-    }
+    profile[key] = scores[poleA] >= scores[poleB] ? poleA : poleB;
   }
 
-  // Find all archetypes that match the profile
-  const matches = archetypes.filter(
+  const comboKey = `${profile.makingRelating}-${profile.thinkingFeeling}-${profile.structuredFluid}-${profile.individualCommunity}`;
+  const primarySlug = COMBO_MAP[comboKey] ?? "creator";
+
+  // Check if a tiebreaker overrides the primary within this same combo
+  const comboMatches = archetypes.filter(
     (a) =>
       a.axes.makingRelating === profile.makingRelating &&
       a.axes.thinkingFeeling === profile.thinkingFeeling &&
       a.axes.structuredFluid === profile.structuredFluid &&
       a.axes.individualCommunity === profile.individualCommunity
   );
+  const tiebreakerMatch = comboMatches.find((a) => tiebreakers.includes(a.slug));
+  const resolvedSlug = tiebreakerMatch?.slug ?? primarySlug;
 
-  if (matches.length === 1) {
-    return matches[0];
-  }
-
-  if (matches.length > 1) {
-    // Check tiebreakers — if any matched archetype has a tiebreaker slug collected from answers
-    const tiebreakerMatch = matches.find((a) =>
-      tiebreakers.includes(a.slug)
-    );
-    if (tiebreakerMatch) {
-      return tiebreakerMatch;
-    }
-
-    // No tiebreaker matched — return first match (stable ordering from archetypes array)
-    return matches[0];
-  }
-
-  // No exact match — find closest archetype by minimizing axis mismatches
-  // Score each archetype by how many axes match + margin-weighted distance
-  let bestMatch = archetypes[0];
-  let bestScore = -Infinity;
-
-  for (const archetype of archetypes) {
-    let score = 0;
-    for (const { key, poleA, poleB } of AXIS_PAIRS) {
-      const archetypePole = archetype.axes[key];
-      const userPole = profile[key];
-      if (archetypePole === userPole) {
-        score += 10 + margins[key]; // matching axis + margin strength
-      } else {
-        score -= margins[key]; // mismatching axis penalized by margin
-      }
-    }
-    // Tiebreaker bonus
-    if (tiebreakers.includes(archetype.slug)) {
-      score += 5;
-    }
-    if (score > bestScore) {
-      bestScore = score;
-      bestMatch = archetype;
-    }
-  }
-
-  return bestMatch;
+  return archetypes.find((a) => a.slug === resolvedSlug) ?? archetypes[0];
 }
 
 // --- Lookup helper ---

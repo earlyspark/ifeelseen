@@ -16,7 +16,7 @@ Results are saved with a unique link so you can share or return to them.
 
 ### What Career Should You Pursue? — Career Quiz (`/quiz/career`)
 
-Answer 10 questions and discover your career archetype — the kind of work you're actually built for, at whatever stage you're at. The final question is a color pick for your gut. Results are one of 10 archetypes, each with a description, career suggestions, and practical guidance.
+Answer 14 questions and discover your career archetype — the kind of work you're actually built for, at whatever stage you're at. 13 multiple choice questions plus a color pick for your gut. Your answers are interpreted holistically by AI to find your best-matching archetype from 10 possibilities, each with a description, career suggestions, and practical guidance.
 
 No login, no data stored — results live at a shareable permalink.
 
@@ -27,8 +27,8 @@ No login, no data stored — results live at a shareable permalink.
 - **Next.js** (App Router) — server rendering, static params, dynamic OG metadata, API routes
 - **Tailwind CSS** — styling
 - **Framer Motion** — animations
-- **Anthropic SDK** — AI reflection generation (card draw experience)
-- **Upstash Redis** — result permalink storage (card draw experience)
+- **Anthropic SDK** — AI reflection generation (card draw) and holistic quiz scoring (career quiz)
+- **Upstash Redis** — result permalink storage (card draw), rate limiting (both experiences)
 - **Vercel** — deployment (auto-deploys on push to `main`)
 
 ---
@@ -61,7 +61,8 @@ KV_REST_API_TOKEN=
 ```
 src/
 ├── app/
-│   ├── api/cards/generate/      # AI reflection API route
+│   ├── api/cards/generate/      # AI reflection API route (card draw)
+│   ├── api/quiz/career/result/  # AI archetype scoring API route (career quiz)
 │   ├── api/og/                  # Dynamic OG image generation (cards + career quiz)
 │   ├── cards/                   # Card draw and reveal pages
 │   ├── cards/result/[id]/       # Shareable card result permalink
