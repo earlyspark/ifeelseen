@@ -162,7 +162,7 @@ export default function Home() {
             className="mt-3 flex-1 text-base leading-relaxed text-white/50"
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
-            Answer 10 questions and discover the archetype of work you&apos;re actually built for — whatever stage you&apos;re at.
+            Answer 14 questions and discover the archetype of work you&apos;re actually built for — whatever stage you&apos;re at.
           </p>
           <Link
             href="/quiz/career"

@@ -357,12 +357,12 @@ function QuestionScreen({
             <button
               key={answer.label}
               onClick={() => onSelect(i)}
-              className="cursor-pointer rounded-xl border px-5 py-4 text-left text-base leading-relaxed transition-all hover:scale-[1.01] active:scale-[0.99]"
+              className="cursor-pointer rounded-xl border px-5 py-4 text-left text-sm leading-relaxed transition-all hover:scale-[1.01] active:scale-[0.99]"
               style={{
-                ...cormorant,
                 backgroundColor: isSelected ? `${ACCENT}20` : CARD_BG,
                 borderColor: isSelected ? `${ACCENT}50` : CARD_BORDER,
-                color: isSelected ? TEXT_PRIMARY : TEXT_SECONDARY,
+                color: isSelected ? TEXT_PRIMARY : TEXT_PRIMARY,
+                boxShadow: isSelected ? "none" : "0 1px 4px rgba(0,0,0,0.06)",
               }}
             >
               {answer.text}
