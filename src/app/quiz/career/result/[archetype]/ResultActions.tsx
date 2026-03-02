@@ -3,9 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 
-const ACCENT = "#c47c5a";
+const ACCENT = "#a55e3e";
 const TEXT_SECONDARY = "#5c544a";
-const TEXT_MUTED = "#8a8078";
+const TEXT_MUTED = "#6b6259";
 
 export default function ResultActions({ slug }: { slug: string }) {
   const [copied, setCopied] = useState(false);

@@ -4,7 +4,7 @@ export default function NotFound() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-[#0e0e0e] px-6 text-center">
       <p
-        className="text-sm tracking-[0.2em] text-white/30"
+        className="text-sm tracking-[0.2em] text-white/50"
         style={{ fontFamily: "var(--font-cormorant)" }}
       >
         this page isn&apos;t here
@@ -15,7 +15,7 @@ export default function NotFound() {
       >
         Something got lost.
       </h1>
-      <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/40">
+      <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/60">
         The reflection you&apos;re looking for may have expired, or the link may be broken.
       </p>
       <Link

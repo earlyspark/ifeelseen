@@ -82,7 +82,7 @@ export default async function ResultPage({
   const hasCardIds = result.wordIds && result.colorIds && result.objectIds;
 
   return (
-    <main className="min-h-screen bg-[#0e0e0e] px-4 py-12 sm:px-6">
+    <main id="main-content" className="min-h-screen bg-[#0e0e0e] px-4 py-12 sm:px-6">
       <div className="mx-auto max-w-3xl">
         {/* Card strip — same as reveal page */}
         {hasCardIds ? (
@@ -106,17 +106,18 @@ export default async function ResultPage({
                   key={color.name}
                   className="h-3 w-3 rounded-full"
                   style={{ backgroundColor: color.hex }}
-                  title={color.name}
-                />
+                >
+                  <span className="sr-only">{color.name}</span>
+                </div>
               ))}
             </div>
-            <p className="mt-3 text-sm text-white/40">
+            <p className="mt-3 text-sm text-white/60">
               {result.objects.join(" · ")}
             </p>
             <div className="mb-10 mt-8 flex items-center gap-4">
               <div className="h-px flex-1 bg-white/10" />
               <span
-                className="text-sm tracking-[0.2em] text-white/30"
+                className="text-sm tracking-[0.2em] text-white/50"
                 style={{ fontFamily: "var(--font-cormorant)" }}
               >
                 your reflection

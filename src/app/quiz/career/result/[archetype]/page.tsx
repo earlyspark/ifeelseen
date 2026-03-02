@@ -8,8 +8,8 @@ import ResultReveal from "./ResultReveal";
 const BG = "#f5f0e8";
 const TEXT_PRIMARY = "#2a2520";
 const TEXT_SECONDARY = "#5c544a";
-const TEXT_MUTED = "#8a8078";
-const ACCENT = "#c47c5a";
+const TEXT_MUTED = "#6b6259";
+const ACCENT = "#a55e3e";
 
 interface PageProps {
   params: Promise<{ archetype: string }>;
@@ -58,6 +58,7 @@ export default async function ArchetypeResultPage({ params }: PageProps) {
 
   return (
     <main
+      id="main-content"
       className="flex min-h-screen flex-col items-center px-5 py-12 sm:px-6"
       style={{ backgroundColor: BG }}
     >
@@ -67,12 +68,12 @@ export default async function ArchetypeResultPage({ params }: PageProps) {
 
         {/* Careers */}
         <div className="mt-10">
-          <h3
+          <h2
             className="mb-4 text-sm tracking-widest uppercase"
             style={{ color: ACCENT }}
           >
             Careers that embody this
-          </h3>
+          </h2>
           <div className="flex flex-wrap gap-2">
             {profile.careers.map((career) => (
               <span
@@ -93,12 +94,12 @@ export default async function ArchetypeResultPage({ params }: PageProps) {
 
         {/* How to bring more */}
         <div className="mt-10">
-          <h3
+          <h2
             className="mb-4 text-sm tracking-widest uppercase"
             style={{ color: ACCENT }}
           >
             How to bring more of this into your life
-          </h3>
+          </h2>
           <p
             className="text-lg leading-relaxed"
             style={{

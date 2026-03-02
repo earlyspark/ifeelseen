@@ -2,7 +2,7 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import FlipCard from "@/components/FlipCard";
 import CardStrip from "@/components/CardStrip";
 import {
@@ -24,6 +24,7 @@ interface ReflectionResult {
 function RevealContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const shouldReduceMotion = useReducedMotion();
 
   const wordIds = searchParams.get("words")?.split(",") ?? [];
   const colorIds = searchParams.get("colors")?.split(",") ?? [];
@@ -69,12 +70,12 @@ function RevealContent() {
     }
 
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#0e0e0e] px-6 text-center">
+      <main id="main-content" className="flex min-h-screen items-center justify-center bg-[#0e0e0e] px-6 text-center">
         <div>
           <p className="text-white/60">Something went wrong with your picks.</p>
           <button
             onClick={() => router.push("/cards")}
-            className="mt-4 text-sm text-[#c9a84c] underline underline-offset-2"
+            className="mt-4 cursor-pointer text-sm text-[#c9a84c] underline underline-offset-2"
           >
             Start over
           </button>
@@ -160,15 +161,15 @@ function RevealContent() {
   );
 
   return (
-    <main className="min-h-screen bg-[#0e0e0e] px-4 py-12 sm:px-6">
+    <main id="main-content" className="min-h-screen bg-[#0e0e0e] px-4 py-12 sm:px-6">
       <div className="mx-auto max-w-3xl">
         <AnimatePresence mode="wait">
           {!isCompact ? (
             /* --- Full card rows (reveal phase) --- */
-            <motion.div key="full" initial={{ opacity: 1 }} exit={{ opacity: 0, y: -16 }} transition={{ duration: 0.4 }}>
+            <motion.div key="full" initial={{ opacity: 1 }} exit={{ opacity: 0, y: shouldReduceMotion ? 0 : -16 }} transition={{ duration: shouldReduceMotion ? 0 : 0.4 }}>
               <div className="mb-12 text-center">
                 <h1 className="text-3xl tracking-wide text-white sm:text-4xl" style={{ fontFamily: "var(--font-cormorant)" }}>Your cards</h1>
-                <p className="mt-2 text-sm text-white/40">Watch what chose you.</p>
+                <p className="mt-2 text-sm text-white/60">Watch what chose you.</p>
               </div>
 
               <div className="mb-12">
@@ -192,25 +193,25 @@ function RevealContent() {
                 </div>
               </div>
 
-              <AnimatePresence>
-                {allRevealed && (
-                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="flex flex-col items-center gap-3">
-                    {error && <p className="text-sm text-red-400">{error}</p>}
-                    <button
-                      onClick={handleReflect}
-                      disabled={isGenerating}
-                      className="rounded-full border border-[#c9a84c]/30 bg-[#c9a84c]/20 px-10 py-3 text-lg font-medium text-[#c9a84c] transition-colors hover:bg-[#c9a84c]/30 disabled:opacity-50"
-                      style={{ fontFamily: "var(--font-cormorant)" }}
-                    >
-                      {isGenerating ? "Reflecting..." : "See your reflection"}
-                    </button>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <div className="flex flex-col items-center gap-3">
+                {error && <p role="alert" className="text-sm text-red-400">{error}</p>}
+                <span aria-live="polite" className="sr-only">
+                  {isGenerating ? "Generating your reflection, please wait." : ""}
+                </span>
+                <button
+                  onClick={handleReflect}
+                  disabled={!allRevealed || isGenerating}
+                  aria-busy={isGenerating}
+                  className={`rounded-full border border-[#c9a84c]/30 bg-[#c9a84c]/20 px-10 py-3 text-lg font-medium text-[#c9a84c] transition-all hover:bg-[#c9a84c]/30 ${allRevealed ? "cursor-pointer opacity-100" : "cursor-default opacity-40"} ${isGenerating ? "opacity-50" : ""}`}
+                  style={{ fontFamily: "var(--font-cormorant)" }}
+                >
+                  {isGenerating ? "Reflecting..." : "See your reflection"}
+                </button>
+              </div>
             </motion.div>
           ) : (
             /* --- Compact strip + reflection --- */
-            <motion.div key="compact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+            <motion.div key="compact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}>
               <CardStrip wordIds={wordIds} colorIds={colorIds} objectIds={objectIds} />
 
               <motion.section className="mb-12" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6 }}>
@@ -231,12 +232,12 @@ function RevealContent() {
               <motion.div className="flex flex-col items-center gap-3" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6, duration: 0.5 }}>
                 <button
                   onClick={handleCopyLink}
-                  className="rounded-full border border-[#c9a84c]/30 bg-[#c9a84c]/20 px-8 py-2.5 text-base text-[#c9a84c] transition-colors hover:bg-[#c9a84c]/30"
+                  className="cursor-pointer rounded-full border border-[#c9a84c]/30 bg-[#c9a84c]/20 px-8 py-2.5 text-base text-[#c9a84c] transition-colors hover:bg-[#c9a84c]/30"
                   style={{ fontFamily: "var(--font-cormorant)" }}
                 >
                   {copied ? "Link copied" : "Copy link"}
                 </button>
-                <button onClick={() => router.push("/cards")} className="text-sm text-white/30 underline underline-offset-2 hover:text-white/50" style={{ fontFamily: "var(--font-cormorant)" }}>
+                <button onClick={() => router.push("/cards")} className="cursor-pointer text-sm text-white/50 underline underline-offset-2 hover:text-white/70" style={{ fontFamily: "var(--font-cormorant)" }}>
                   Draw again
                 </button>
               </motion.div>
@@ -250,7 +251,7 @@ function RevealContent() {
 
 export default function RevealPage() {
   return (
-    <Suspense fallback={<main className="flex min-h-screen items-center justify-center bg-[#0e0e0e]"><p className="text-white/40">Loading...</p></main>}>
+    <Suspense fallback={<main id="main-content" className="flex min-h-screen items-center justify-center bg-[#0e0e0e]"><p className="text-white/60">Loading...</p></main>}>
       <RevealContent />
     </Suspense>
   );
