@@ -42,7 +42,7 @@ export default function DrawPage() {
             className="text-3xl tracking-wide text-white sm:text-4xl"
             style={{ fontFamily: "var(--font-cormorant)" }}
           >
-            Pick without thinking.
+            What&apos;s been on your mind?
           </h1>
           <p className="mt-2 text-sm text-white/60">
             Pick 2 from each pile. Don&apos;t overthink it.
