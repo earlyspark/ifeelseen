@@ -33,13 +33,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description,
       type: "website",
       url: `https://ifeelseen.ai/quiz/career/result/${slug}`,
-      images: [{ url: `https://ifeelseen.ai/api/og/career/${slug}` }],
+      images: [{ url: `https://ifeelseen.ai/card-career-${slug}.png` }],
     },
     twitter: {
       card: "summary_large_image",
       title: `${profile.name}: ${profile.essenceLine}`,
       description,
-      images: [`https://ifeelseen.ai/api/og/career/${slug}`],
+      images: [`https://ifeelseen.ai/card-career-${slug}.png`],
     },
   };
 }
