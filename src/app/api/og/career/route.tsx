@@ -4,13 +4,13 @@ import { join } from "path";
 
 export async function GET() {
   const imageData = readFileSync(
-    join(process.cwd(), "public", "card-back-careerquiz-color.png")
+    join(process.cwd(), "public", "og-cards", "card-back-careerquiz-color.jpg")
   );
-  const cardBackUrl = `data:image/png;base64,${imageData.toString("base64")}`;
+  const cardBackUrl = `data:image/jpeg;base64,${imageData.toString("base64")}`;
 
-  const fontData = await fetch(
-    "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_v86KnTOitk9IfqxUQ.woff2"
-  ).then((res) => res.arrayBuffer());
+  const fontData = readFileSync(
+    join(process.cwd(), "assets", "CormorantGaramond-Regular.ttf")
+  );
 
   return new ImageResponse(
     (
