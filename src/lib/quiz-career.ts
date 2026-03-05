@@ -52,7 +52,7 @@ export interface ArchetypeProfile {
   };
 }
 
-// --- Questions (Q1–Q9) ---
+// --- Questions (Q1–Q13) ---
 
 export const questions: QuizQuestion[] = [
   {
@@ -398,7 +398,7 @@ export const questions: QuizQuestion[] = [
   },
 ];
 
-// --- Color Cards (Q10 in PRD, now Q15 with 5 additional questions) ---
+// --- Color Cards (Q14) ---
 
 export const colorCards: ColorCard[] = [
   {

@@ -1,11 +1,12 @@
 import { ImageResponse } from "next/og";
-import { NextRequest } from "next/server";
+import { readFileSync } from "fs";
+import { join } from "path";
 
-export const runtime = "edge";
-
-export async function GET(request: NextRequest) {
-  const origin = new URL(request.url).origin;
-  const cardBackUrl = `${origin}/card-back-careerquiz-color.png`;
+export async function GET() {
+  const imageData = readFileSync(
+    join(process.cwd(), "public", "card-back-careerquiz-color.png")
+  );
+  const cardBackUrl = `data:image/png;base64,${imageData.toString("base64")}`;
 
   const fontData = await fetch(
     "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_v86KnTOitk9IfqxUQ.woff2"

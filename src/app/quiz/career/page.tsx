@@ -23,14 +23,14 @@ export const metadata: Metadata = {
       "Answer 14 questions and discover the archetype of work you\u2019re actually built for \u2014 whatever stage you\u2019re at.",
     type: "website",
     url: "https://ifeelseen.ai/quiz/career",
-    images: [{ url: "https://ifeelseen.ai/card-back-careerquiz-color.png" }],
+    images: [{ url: "https://ifeelseen.ai/api/og/career" }],
   },
   twitter: {
     card: "summary_large_image",
     title: "What Career Should You Pursue? | I Feel Seen",
     description:
       "Answer 14 questions and discover the archetype of work you\u2019re actually built for \u2014 whatever stage you\u2019re at.",
-    images: ["https://ifeelseen.ai/card-back-careerquiz-color.png"],
+    images: ["https://ifeelseen.ai/api/og/career"],
   },
 };
 

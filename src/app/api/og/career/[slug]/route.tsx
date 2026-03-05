@@ -1,11 +1,11 @@
 import { ImageResponse } from "next/og";
 import { NextRequest } from "next/server";
 import { findArchetype } from "@/lib/quiz-career";
-
-export const runtime = "edge";
+import { readFileSync } from "fs";
+import { join } from "path";
 
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
@@ -15,8 +15,10 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  const origin = new URL(request.url).origin;
-  const cardUrl = `${origin}/card-career-${slug}.png`;
+  const imageData = readFileSync(
+    join(process.cwd(), "public", `card-career-${slug}.png`)
+  );
+  const cardUrl = `data:image/png;base64,${imageData.toString("base64")}`;
 
   const fontData = await fetch(
     "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_v86KnTOitk9IfqxUQ.woff2"
