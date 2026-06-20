@@ -8,6 +8,7 @@ import {
   findColorCards,
   findObjectCards,
 } from "@/lib/cards";
+import { CLAUDE_MODEL } from "@/lib/claude";
 
 const anthropic = new Anthropic();
 
@@ -123,7 +124,7 @@ ENCOURAGING NOTE (3-5 sentences): This should be the clearest, most direct secti
 Tone: Seen. Witnessed. Warm but not saccharine. True but not harsh. Write like someone who loves them and needs nothing from them. IMPORTANT: Avoid abstract/esoteric language like "sacred space", "particular gift to the world", "the universe", "vessel of light." Be a human talking to a human.`;
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
+      model: CLAUDE_MODEL,
       max_tokens: 1024,
       messages: [{ role: "user", content: prompt }],
     });

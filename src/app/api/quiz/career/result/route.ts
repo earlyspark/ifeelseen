@@ -3,6 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { Redis } from "@upstash/redis";
 import { Ratelimit } from "@upstash/ratelimit";
 import { archetypes } from "@/lib/quiz-career";
+import { CLAUDE_MODEL } from "@/lib/claude";
 
 const anthropic = new Anthropic();
 
@@ -78,7 +79,7 @@ ${ARCHETYPE_SUMMARY}
 Respond with ONLY the archetype slug — one word, lowercase, no punctuation.`;
 
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
+      model: CLAUDE_MODEL,
       max_tokens: 20,
       system:
         "You are a career archetype assessor. Based on someone's quiz answers, you select their best-matching career archetype from a predefined list. Respond ONLY with the archetype slug — one word, lowercase, no punctuation. Valid slugs: creator, healer, guide, investigator, builder, connector, advocate, performer, steward, visionary",
